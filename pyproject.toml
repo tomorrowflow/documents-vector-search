@@ -1,0 +1,14 @@
+[project]
+name = "documents-vector-search"
+version = "0.1.0"
+description = "Support Jira and Confluence, provides abstractions to add more sources"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "bs4>=0.0.2",
+    "faiss-cpu>=1.10.0",
+    "langchain>=0.3.23",
+    "mcp>=1.6.0",
+    "requests>=2.32.3",
+    "sentence-transformers>=4.0.2",
+]
