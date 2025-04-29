@@ -21,26 +21,20 @@ Despite the used dependencies the project allows easy switch to other technologi
 1) Set CONF_TOKEN env variable with your Confluence Bearer token (optionally you can set CONF_LOGIN and CONF_PASSWORD env variables instead with your Confluence user login and password, but token variant is more recommended)
 2) Run command like:
 ```
-uv run confluence_collection_create_cmd_adapter.py \
-    --collection "confluence" \
-    --url "${baseConfluenceUrl}" \
-    --cql "${confluenceQuery}"
+uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}"
 ```
 
 Notes:
 - you can use different value for "collection" parameter, but you will need to use same value during collection update and search. It defines collection name and all collection data will be stored in folder with the name in `./data`;
 - please update ${baseConfluenceUrl} to real Confluence base url, example: https://confluence.example.com ;
-- pelase updae ${confluenceQuery} to real Confluence query, example: (type = "page") AND (space = "MySpaceName") AND (created >= "2024-01-14" OR lastModified >= "2024-01-14")
+- pelase updae ${confluenceQuery} to real Confluence query, example: (type = 'page') AND (space = 'MySpaceName') AND (created >= '2024-01-14' OR lastModified >= '2024-01-14')
 
 ### To create collection for Jira:
 
 1) Set JIRA_TOKEN env variable with your Jira Bearer token (optionally you can set JIRA_LOGIN and JIRA_PASSWORD env variables instead with your Jira user login and password, but token variant is more recommended)
 2) Run command like:
 ```
-uv run jira_collection_create_cmd_adapter.py \
-    --collection "jira" \
-    --url "${baseJiraUrl}" \
-    --jql "${jiraQuery}"
+uv run jira_collection_create_cmd_adapter.py --collection "jira" --url "${baseJiraUrl}" --jql "${jiraQuery}"
 ```
 
 Notes:
@@ -66,9 +60,7 @@ Notes:
 
 Run command like:
 ```
-uv run collection_search_cmd_adapter.py \
-    --collection "${collectionName}" \
-    --query "${searchQuery}"
+uv run collection_search_cmd_adapter.py --collection "${collectionName}" --query "${searchQuery}"
 ```
 
 Notes:

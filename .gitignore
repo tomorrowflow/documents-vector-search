@@ -4,3 +4,5 @@ data
 .idea
 .venv
 **/.DS_Store
+.vscode
+.dccache
