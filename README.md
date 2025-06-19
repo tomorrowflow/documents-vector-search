@@ -53,21 +53,91 @@ To use Qdrant as your vector database, you need to:
    - indexer_Qdrant__embeddings_all-MiniLM-L6-v2
    - indexer_Qdrant__embeddings_all-mpnet-base-v2
    - indexer_Qdrant__embeddings_multi-qa-distilbert-cos-v1
-57 | ### How to Switch Between FAISS and Qdrant
-59 | To switch between FAISS and Qdrant, simply specify the desired indexer when creating a collection:
-61 | - For FAISS:
-63 |    ```bash
-65 |    uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_FAISS_IndexFlatL2__embeddings_all-MiniLM-L6-v2"
-67 |    ```
-69 | - For Qdrant:
-71 |    ```bash
-72 |    uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_Qdrant__embeddings_all-MiniLM-L6-v2"
-74 |    ```
-76 | ### Environment Variables
-78 | The following environment variables can be used to configure Qdrant:
-79 | - `QDRANT_HOST`: Qdrant host address (default: "localhost")
-80 | - `QDRANT_PORT`: Qdrant port number (default: 6333)
-81 | 82 | Communication:
+
+### How to Switch Between FAISS and Qdrant
+
+To switch between FAISS and Qdrant, simply specify the desired indexer when creating a collection:
+
+- For FAISS:
+  ```bash
+  uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_FAISS_IndexFlatL2__embeddings_all-MiniLM-L6-v2"
+  ```
+
+- For Qdrant:
+  ```bash
+  uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_Qdrant__embeddings_all-MiniLM-L6-v2"
+  ```
+
+### Environment Variables
+
+The following environment variables can be used to configure Qdrant:
+- `QDRANT_HOST`: Qdrant host address (default: "localhost")
+- `QDRANT_PORT`: Qdrant port number (default: 6333)
+
+### Ollama Environment Variables
+
+The following environment variables can be used to configure Ollama:
+- `OLLAMA_HOST`: Ollama API host address (default: "http://localhost:11434")
+- `OLLAMA_MODEL`: Ollama model name to use for embeddings (default: "default")
+
+#### How to Set Ollama Environment Variables
+
+You can set these environment variables in your shell before running the scripts:
+
+```bash
+# Set Ollama host (optional, default is http://localhost:11434)
+export OLLAMA_HOST="http://your-ollama-host:11434"
+
+# Set Ollama model (optional, default is "default")
+export OLLAMA_MODEL="your-model-name"
+```
+
+Or you can set them directly in your script:
+
+```bash
+OLLAMA_HOST="http://your-ollama-host:11434" OLLAMA_MODEL="your-model-name" uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_FAISS_IndexFlatL2__embeddings_ollama"
+```
+
+## Ollama Embeddings Support
+
+This project now supports Ollama as an embedding provider. Ollama provides high-quality embeddings for various AI applications.
+
+### How to Use Ollama Embeddings
+
+To use Ollama as your embedding provider, you need to:
+
+1. Ensure the Ollama API is running and accessible at the URL specified in the `OLLAMA_HOST` environment variable (default: http://localhost:11434)
+2. Set the `OLLAMA_MODEL` environment variable if you want to use a specific model for embeddings (default: "default")
+3. Specify "ollama" as the embedding model type when creating or loading indexers
+
+### Available Ollama Indexers
+
+You can use Ollama embeddings with both FAISS and Qdrant indexers:
+
+- For FAISS: `indexer_FAISS_IndexFlatL2__embeddings_ollama`
+- For Qdrant: `indexer_Qdrant__embeddings_ollama`
+
+### Examples
+
+#### Creating a Collection with Ollama Embeddings
+
+To create a collection using Ollama embeddings with FAISS:
+
+```bash
+uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_FAISS_IndexFlatL2__embeddings_ollama"
+```
+
+To create a collection using Ollama embeddings with Qdrant:
+
+```bash
+uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_Qdrant__embeddings_ollama"
+```
+
+#### Loading an Existing Collection with Ollama Embeddings
+
+When loading an existing collection that uses Ollama embeddings, the system will automatically detect and use the Ollama embedding provider.
+
+Communication:
 - if you like the app, please add a star for the repo (it encourages me much for the future work);
 - if you see some issues or improvements, please log them here: https://github.com/shnax0210/documents-vector-search/issues
 - if you want to chat me, please find me on [LinkedIn](https://www.linkedin.com/in/oleksii-shnepov-841447158/)
@@ -209,7 +279,6 @@ Notes:
 Prompt examples:
 - "Find information about AI use cases, search info on Confluence, include all used links in response"
 - "Find information about PDP carousel, search info on Jira, include all used links in response"
-
 
 ## Collection structure
 Collection is a subfolder of the `./data/collections` folder.

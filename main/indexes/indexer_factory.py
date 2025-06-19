@@ -1,8 +1,18 @@
 from .indexers.faiss_indexer import FaissIndexer
 from .indexers.qdrant_indexer import QdrantIndexer
 from .embeddings.sentence_embeder import SentenceEmbedder
+from .embeddings.ollama_embeder import OllamaEmbedder
 
 def create_indexer(indexer_name):
+    # Handle Ollama embeddings for FAISS indexers
+    if indexer_name == "indexer_FAISS_IndexFlatL2__embeddings_ollama":
+        return FaissIndexer(indexer_name, OllamaEmbedder())
+
+    # Handle Ollama embeddings for Qdrant indexers
+    if indexer_name == "indexer_Qdrant__embeddings_ollama":
+        return QdrantIndexer(indexer_name, OllamaEmbedder())
+
+    # Existing FAISS indexer options
     if indexer_name == "indexer_FAISS_IndexFlatL2__embeddings_all-MiniLM-L6-v2":
         return FaissIndexer(indexer_name, SentenceEmbedder(model_name="sentence-transformers/all-MiniLM-L6-v2"))
 
@@ -12,7 +22,7 @@ def create_indexer(indexer_name):
     if indexer_name == "indexer_FAISS_IndexFlatL2__embeddings_multi-qa-distilbert-cos-v1":
         return FaissIndexer(indexer_name, SentenceEmbedder(model_name="sentence-transformers/multi-qa-distilbert-cos-v1"))
 
-    # Qdrant indexer options
+    # Existing Qdrant indexer options
     if indexer_name == "indexer_Qdrant__embeddings_all-MiniLM-L6-v2":
         return QdrantIndexer(indexer_name, SentenceEmbedder(model_name="sentence-transformers/all-MiniLM-L6-v2"))
 
@@ -40,6 +50,9 @@ def load_indexer(indexer_name, collection_name, persister):
                 embedder_model = "sentence-transformers/all-mpnet-base-v2"
             elif "multi-qa-distilbert-cos-v1" in indexer_name:
                 embedder_model = "sentence-transformers/multi-qa-distilbert-cos-v1"
+            elif "ollama" in indexer_name:
+                # Handle Ollama embeddings
+                return QdrantIndexer(indexer_name, OllamaEmbedder())
 
             if embedder_model:
                 indexer = QdrantIndexer(indexer_name, SentenceEmbedder(model_name=embedder_model))
@@ -63,5 +76,10 @@ def load_indexer(indexer_name, collection_name, persister):
     if indexer_name == "indexer_FAISS_IndexFlatL2__embeddings_multi-qa-distilbert-cos-v1":
         serialized_index = persister.read_bin_file(f"{collection_name}/indexes/{indexer_name}/indexer")
         return FaissIndexer(indexer_name, SentenceEmbedder(model_name="sentence-transformers/multi-qa-distilbert-cos-v1"), serialized_index)
+
+    # Handle FAISS indexers with Ollama embeddings
+    if indexer_name == "indexer_FAISS_IndexFlatL2__embeddings_ollama":
+        serialized_index = persister.read_bin_file(f"{collection_name}/indexes/{indexer_name}/indexer")
+        return FaissIndexer(indexer_name, OllamaEmbedder(), serialized_index)
 
     raise ValueError(f"Unknown indexer name: {indexer_name}")
