@@ -27,10 +27,47 @@ Key technologies used:
 - "sentence-transformers" lib (https://pypi.org/project/sentence-transformers/) for embeddings;
 - "Unstructured" lib: https://github.com/Unstructured-IO/unstructured;
 - "LangChain" lib: https://python.langchain.com/docs/introduction/.
+- "Qdrant" lib: https://qdrant.tech/documentation/ (for vector database support)
 
 Please check this article for more context: https://medium.com/@shnax0210/mcp-tool-for-vector-search-in-confluence-and-jira-6beeade658ba
 
-Communication:
+## Qdrant Vector Database Support
+
+This project now supports Qdrant as an alternative to FAISS for vector storage and search.
+Qdrant is a high-performance, scalable vector database designed for AI applications.
+It provides advanced features like approximate nearest neighbor search, filtering, and more.
+
+### How to Configure Qdrant
+
+To use Qdrant as your vector database, you need to:
+1. Install Qdrant: Follow the installation instructions at https://qdrant.tech/documentation/get-started/
+2. Set the Qdrant host and port (optional, defaults to localhost:6333):
+   ```python
+   indexer = QdrantIndexer(name="my_indexer", host="my-qdrant-host", port=6333)
+   ```
+3. Choose a Qdrant-based indexer when creating a collection:
+   ```bash
+   uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_Qdrant__embeddings_all-MiniLM-L6-v2"
+   ```
+   Available Qdrant indexers:
+   - indexer_Qdrant__embeddings_all-MiniLM-L6-v2
+   - indexer_Qdrant__embeddings_all-mpnet-base-v2
+   - indexer_Qdrant__embeddings_multi-qa-distilbert-cos-v1
+57 | ### How to Switch Between FAISS and Qdrant
+59 | To switch between FAISS and Qdrant, simply specify the desired indexer when creating a collection:
+61 | - For FAISS:
+63 |    ```bash
+65 |    uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_FAISS_IndexFlatL2__embeddings_all-MiniLM-L6-v2"
+67 |    ```
+69 | - For Qdrant:
+71 |    ```bash
+72 |    uv run confluence_collection_create_cmd_adapter.py --collection "confluence" --url "${baseConfluenceUrl}" --cql "${confluenceQuery}" --indexer "indexer_Qdrant__embeddings_all-MiniLM-L6-v2"
+74 |    ```
+76 | ### Environment Variables
+78 | The following environment variables can be used to configure Qdrant:
+79 | - `QDRANT_HOST`: Qdrant host address (default: "localhost")
+80 | - `QDRANT_PORT`: Qdrant port number (default: 6333)
+81 | 82 | Communication:
 - if you like the app, please add a star for the repo (it encourages me much for the future work);
 - if you see some issues or improvements, please log them here: https://github.com/shnax0210/documents-vector-search/issues
 - if you want to chat me, please find me on [LinkedIn](https://www.linkedin.com/in/oleksii-shnepov-841447158/)
